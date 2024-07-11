@@ -1,0 +1,83 @@
+beforeEach( () => {
+        cy.session('loginEntidade', () => {
+          cy.login(Cypress.env('cnpj_correto'), Cypress.env('conta_correta'))
+          }, { 
+          cacheAcrossSpecs: true
+        })
+      }) 
+
+it('Validando o rascunho de um novo projeto', () => {
+
+    const filePath = './cypress/fixtures/teste.png'
+
+    cy.visit('/ui/home')
+    cy.get('.home-menu-item-text').contains('projetos').click()
+    cy.get('.v-btn__prepend').click()
+    cy.get('#nome-projeto').type("Teste edu automação")
+    cy.get('#objetivos').click({force:true})
+    cy.get('.v-overlay-container').contains('Erradicação da pobreza').click()
+    cy.get('#segmento').click({force:true})
+    cy.get('.v-overlay-container').contains('Educacional').click()
+    cy.get('#descricao').type("Testando o robô realizando automação para criar novos projetos no fundo social")
+    cy.get('#impacto-social').type("Testando o robô realizando automação para criar novos projetos no fundo social")
+    cy.get('#outros-trabalhos').type("Testando o robô realizando automação para criar novos projetos no fundo social")
+    cy.get('#descricao-contrapartida').type("Testando o robô realizando automação para criar novos projetos no fundo social")
+    cy.get('#localizacao').type("São Paulo")
+    cy.get('#numero-beneficiados').type("2000")
+    cy.get('#endereco').type("Avenida paulista, 2300")
+    cy.get('#valor-total').type("1200000")
+    cy.get('#valor-solicitado').type("1000000")
+    cy.get('.v-btn__content').contains('Avançar').click()
+    cy.get('.v-btn__content').contains('Adicionar Responsável').click()
+    cy.get('#nome').type('Robô Automação da Silva')
+    cy.get('#email').type('Roboautomaçaodasilva@gmail.com')
+    cy.get('#telefone').type('11925251212')
+    cy.get('#funcao').type('Chefe')
+    cy.get('.text-wrap').contains('Salvar').click()
+    cy.get('.v-btn__content').contains('Avançar').click()
+    cy.get('.v-btn__content').contains('Informar cronograma').click()
+    cy.get('#data').type('2024-01-01')
+    cy.get('#descricao').type('O robô testará o seu sistema')
+    cy.get('#responsavel').type('Robô sênior')
+    cy.get('.text-wrap').contains('Salvar').click()
+    cy.get('.v-btn__content').contains('Avançar').click()
+    cy.get('.v-btn__content').contains('Adicionar Item').click()
+    cy.get('#necessidade').type('Ajudar o robô')
+    cy.get('#valor').type('200000')
+    cy.get('#fonte-recurso').click({force:true})
+    cy.get('.v-overlay-container').contains('Contrapartida').click()
+    cy.get('#nome-arquivo').type('Anexo do Robô')
+    cy.get('input[type="file"]').selectFile(filePath, {force:true})
+    cy.get('.text-wrap').contains('Salvar').click()
+    cy.get('.v-btn__content').contains('Adicionar Item').click()
+    cy.get('#necessidade').type('Ajudar o robô novamente')
+    cy.get('#valor').type('1000000')
+    cy.get('#fonte-recurso').click({force:true})
+    cy.get('.v-overlay-container').contains('Fundo Social').click()
+    cy.get('#nome-arquivo').type('Anexo do Robô')
+    cy.get('input[type="file"]').selectFile(filePath, {force:true})
+    cy.get('.text-wrap').contains('Salvar').click()
+    cy.get('.v-btn__content').contains('Avançar').click()
+    cy.get('.v-btn__content').contains('Adicionar Documentos').click()
+    cy.get('#nome-arquivo-0').type('Robozão')
+    cy.get('input[type="file"]').selectFile(filePath, {force:true})
+    cy.get('.v-btn__content').contains('Excluir').click()
+    cy.get('.v-btn__content').contains('Adicionar Documentos').click()
+    cy.get('#nome-arquivo-0').type('Robozão')
+    cy.get('input[type="file"]').selectFile(filePath, {force:true})
+    cy.get('.v-btn__content').contains('Avançar').click()
+    cy.get('.v-btn__content').contains('Salvar e enviar depois').click()
+    cy.wait(2500)
+    cy.visit('/ui/projetos')
+    cy.get('[class="v-chip__content"]').contains('Rascunho').should('be.visible').and('exist')
+});
+
+it('Validando a exclusão do rasunho criado', () => {
+
+    cy.visit('/ui/projetos')
+    cy.get('[class="v-chip__content"]').contains('Rascunho').click()
+    cy.get('.v-btn__content').contains('Excluir').click()
+    cy.get('.v-btn__content').contains('Confirmar').click()
+    cy.get('[class="v-chip__content"]').contains('Rascunho').should('not.exist')
+
+});
